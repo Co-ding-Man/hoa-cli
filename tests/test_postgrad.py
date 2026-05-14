@@ -179,7 +179,7 @@ class PostgradLogicTests(unittest.TestCase):
             ],
         }
 
-        with tempfile.TemporaryDirectory(dir="D:\\tmp") as tmpdir:
+        with tempfile.TemporaryDirectory() as tmpdir:
             path = Path(tmpdir) / "sample.toml"
             write_toml(path, data)
 

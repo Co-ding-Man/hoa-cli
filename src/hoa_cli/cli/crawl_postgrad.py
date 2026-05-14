@@ -134,6 +134,11 @@ def _collect_courses_for_major(major_entry: dict[str, object]) -> list[dict]:
             raw_courses = fetch_postgrad_courses_by_group(
                 plan_id, leaf_group_id, zyfx=zyfx, bgid=bgid
             )
+            # 第二层过滤：课程级 kzmc 检查。第一层 select_leaf_group_ids 已按
+            # 课组名排除了应跳过的分支，但 API 返回的课组树中存在扁平"选修课"
+            # 叶子节点——其课组名不含排除关键词，却被用作各学科模块选修课程的
+            # 总入口，取回的课程条目 kzmc 仍为"XX模块：…选修课程清单"，必须
+            # 在课程级再过滤一次。
             kept_courses = [
                 course for course in raw_courses if not should_exclude_course_item(course)
             ]

@@ -124,7 +124,12 @@ def should_exclude_group_name(
 def should_exclude_course_item(
     raw_course: dict[str, Any], *, excluded_names: set[str] | None = None
 ) -> bool:
-    """Return True when a fetched course row belongs to an excluded group."""
+    """Return True when a fetched course row belongs to an excluded group.
+
+    与课组级过滤互补：课组树中存在扁平"选修课"叶子节点，其课组名不命中
+    排除规则，但取回的课程条目 kzmc 可能是"XX模块：…选修课程清单"，
+    因此需要在课程级对 kzmc 再做一次检查。
+    """
     group_name = str(raw_course.get("kzmc") or "").strip()
     return should_exclude_group_name(group_name, excluded_names=excluded_names)
 
